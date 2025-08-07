@@ -37,4 +37,40 @@ while cap.isOpened():
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = detector(gray)
 
-    
+    for face in faces:
+        shape = predictor(gray, face)
+        shape_points = [(shape.part(i).x, shape.part(i).y) for i in range(68)]
+
+        # 왼쪽 눈, 오른쪽 눈 좌표 추출
+        left_eye = [shape_points[i] for i in LEFT_EYE_INDEXES]
+        right_eye = [shape_points[i] for i in RIGHT_EYE_INDEXES]
+
+        # EAR 계산
+        left_ear = calculate_ear(left_eye)
+        right_ear = calculate_ear(right_eye)
+        avg_ear = (left_ear + right_ear) / 2.0
+
+        # 눈 윤곽선 그리기 (옵션)
+        for (x, y) in left_eye + right_eye:
+            cv2.circle(frame, (x, y), 2, (0, 255, 0), -1)
+
+        # EAR 임계값 비교
+        if avg_ear < EAR_THRESHOLD:
+            sleep_frame_count += 1
+        else:
+            sleep_frame_count = 0
+
+        # 일정 프레임 이상 눈 감기 -> 졸음 경고
+        if sleep_frame_count >= EAR_CONSEC_FRAMES:
+            cv2.putText(frame, "DROWSINESS ALERT!", (50, 100),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3)
+
+    # 결과 출력
+    cv2.imshow("Drowsiness Detection", frame)
+
+    # 종료 조건 (ESC)
+    if cv2.waitKey(1) == 27:
+        break
+
+cap.release()
+cv2.destroyAllWindows()
