@@ -18,3 +18,23 @@ RIGHT_EYE_INDEXES = list(range(42, 48))
 EAR_THRESHOLD = 0.25
 EAR_CONSEC_FRAMES = 20
 
+# dlib 얼굴 검출기와 랜드마크 예측기 초기화
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
+
+# 졸음 프레임 카운터
+sleep_frame_count = 0
+
+# 웹캠 캡처 시작
+cap = cv2.VideoCapture(0)
+
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        print("카메라에서 영상을 가져올 수 없습니다.")
+        break
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = detector(gray)
+
+    
