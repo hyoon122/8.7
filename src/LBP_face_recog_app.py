@@ -180,11 +180,11 @@ def recognize_face():
 
 if __name__ == "__main__":
     # 모드 선택 안내문
-    print("Select mode:")
-    print("1: Collect face data")
-    print("2: Train model")
-    print("3: Recognize face")
-    mode = input("Enter mode number (1/2/3): ").strip()
+    print("1->2->3 순서대로 모드를 선택하세요.:")
+    print("1: 얼굴 데이터 수집 모드")
+    print("2: 수집한 데이터 훈련 모드")
+    print("3: 얼굴 인식 모드")
+    mode = input("실행시킬 모드의 숫자를 입력 (숫자만 입력!) (1/2/3): ").strip()
 
     if mode == '1':
         collect_data()
