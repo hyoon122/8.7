@@ -1,2 +1,5 @@
 data/*.xml
-data/*.jpg
+src/*.xml
+src/*.bat
+src/*.bz2
+src/faces*
